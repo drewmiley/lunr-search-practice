@@ -1,5 +1,9 @@
 console.log('hello');
 
+console.log($);
+
+console.log(lunr);
+
 var documents = [{
   "name": "Lunr",
   "text": "Like Solr, but much smaller, and not as bright."
