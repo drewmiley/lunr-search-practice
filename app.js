@@ -4,26 +4,56 @@ console.log($);
 
 console.log(lunr);
 
-var documents = [{
-  "name": "Lunr",
-  "text": "Like Solr, but much smaller, and not as bright."
-}, {
-  "name": "React",
-  "text": "A JavaScript library for building user interfaces."
-}, {
-  "name": "Lodash",
-  "text": "A modern JavaScript utility library delivering modularity, performance & extras."
-}]
+const keywords = ['Apple', 'Banana', 'Cucumber', 'Dolcelatte', 'Edam', 'Fries', 'Gorgonzola', 'Houmous', 'Icing', 'Jelly', 'Kumquat', 'Lichen', 'Melon', 'Neuro', 'Olive'];
 
-var idx = lunr(function () {
-  this.ref('name')
-  this.field('text')
+const titlePrefixes = ['Part', 'Name', 'Worker', 'Key'];
 
-  documents.forEach(function (doc) {
-    this.add(doc)
-  }, this)
-})
+const itemsToGenerate = 10000;
 
-var search = idx.search("bright");
+const documents = new Array(itemsToGenerate).map((d, i) => {
+	const id = `${ titlePrefixes[Math.floor(titlePrefixes.length * Math.random())] }000AB${ i }`;
+	const name = `${ keywords[Math.floor(keywords.length * Math.random())] }
+		${ titlePrefixes[Math.floor(titlePrefixes.length * Math.random())] }
+		${ keywords[Math.floor(keywords.length * Math.random())] }`;
+	const keywords = new Array(Math.ceil(3 * Math.random())).map((d, i) => keywords[Math.floor(keywords.length * Math.random())]);
+	return { id, ID: id, name, keywords };
+});
 
-console.log(search);
+var lunrSearchID = lunr(function() {
+	this.ref('id')
+	this.field('ID')
+
+	documents.forEach(function(doc) {
+		this.add(doc)
+	}, this)
+});
+
+const idSearchResults = lunrSearchID.search('234');
+
+console.log(idSearchResults);
+
+var lunrSearchName = lunr(function() {
+	this.ref('id')
+	this.field('name')
+
+	documents.forEach(function(doc) {
+		this.add(doc)
+	}, this)
+});
+
+const nameSearchResults = lunrSearchName.search('PartApple');
+
+console.log(nameSearchResults);
+
+var lunrSearchKeywords = lunr(function() {
+	this.ref('id')
+	this.field('keywords')
+
+	documents.forEach(function(doc) {
+		this.add(doc)
+	}, this)
+});
+
+const keywordsSearchResults = lunrSearchKeywords.search('Houmous');
+
+console.log(keywordsSearchResults);
