@@ -4,18 +4,16 @@ console.log($);
 
 console.log(lunr);
 
-const keywords = ['Apple', 'Banana', 'Cucumber', 'Dolcelatte', 'Edam', 'Fries', 'Gorgonzola', 'Houmous', 'Icing', 'Jelly', 'Kumquat', 'Lichen', 'Melon', 'Neuro', 'Olive'];
+const keywordValues = ['Apple', 'Banana', 'Cucumber', 'Dolcelatte', 'Edam', 'Fries', 'Gorgonzola', 'Houmous', 'Icing', 'Jelly', 'Kumquat', 'Lichen', 'Melon', 'Neuro', 'Olive'];
 
 const titlePrefixes = ['Part', 'Name', 'Worker', 'Key'];
 
 const itemsToGenerate = 10000;
 
-const documents = new Array(itemsToGenerate).map((d, i) => {
+const documents = Array(itemsToGenerate).fill(undefined).map((d, i) => {
 	const id = `${ titlePrefixes[Math.floor(titlePrefixes.length * Math.random())] }000AB${ i }`;
-	const name = `${ keywords[Math.floor(keywords.length * Math.random())] }
-		${ titlePrefixes[Math.floor(titlePrefixes.length * Math.random())] }
-		${ keywords[Math.floor(keywords.length * Math.random())] }`;
-	const keywords = new Array(Math.ceil(3 * Math.random())).map((d, i) => keywords[Math.floor(keywords.length * Math.random())]);
+	const name = `${ keywordValues[Math.floor(keywordValues.length * Math.random())] }-${ titlePrefixes[Math.floor(titlePrefixes.length * Math.random())] }-${ keywordValues[Math.floor(keywordValues.length * Math.random())] }`;
+	const keywords = Array(Math.ceil(3 * Math.random())).fill(undefined).map((d, i) => keywordValues[Math.floor(keywordValues.length * Math.random())]);
 	return { id, ID: id, name, keywords };
 });
 
@@ -28,7 +26,7 @@ var lunrSearchID = lunr(function() {
 	}, this)
 });
 
-const idSearchResults = lunrSearchID.search('234');
+const idSearchResults = lunrSearchID.search('*000AB234*');
 
 console.log(idSearchResults);
 
@@ -41,7 +39,7 @@ var lunrSearchName = lunr(function() {
 	}, this)
 });
 
-const nameSearchResults = lunrSearchName.search('PartApple');
+const nameSearchResults = lunrSearchName.search('Part Apple');
 
 console.log(nameSearchResults);
 
