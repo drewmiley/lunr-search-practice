@@ -14,29 +14,13 @@ const documents = Array(itemsToGenerate).fill(undefined).map((d, i) => {
 	const id = `${ titlePrefixes[Math.floor(titlePrefixes.length * Math.random())] }000AB${ i }`;
 	const name = `${ keywordValues[Math.floor(keywordValues.length * Math.random())] }-${ titlePrefixes[Math.floor(titlePrefixes.length * Math.random())] }-${ keywordValues[Math.floor(keywordValues.length * Math.random())] }`;
 	const keywords = Array(Math.ceil(3 * Math.random())).fill(undefined).map((d, i) => keywordValues[Math.floor(keywordValues.length * Math.random())]);
-	return { id, ID: id, name, keywords };
+	return { id, name, keywords };
 });
 
-var lunrSearchID = lunr(function() {
+const lunrSearch = lunr(function() {
 	this.ref('id')
-	this.field('ID')
-
-	documents.forEach(function(doc) {
-		this.add(doc)
-	}, this)
-});
-
-var lunrSearchName = lunr(function() {
-	this.ref('id')
+	this.field('id')
 	this.field('name')
-
-	documents.forEach(function(doc) {
-		this.add(doc)
-	}, this)
-});
-
-var lunrSearchKeywords = lunr(function() {
-	this.ref('id')
 	this.field('keywords')
 
 	documents.forEach(function(doc) {
@@ -46,7 +30,7 @@ var lunrSearchKeywords = lunr(function() {
 
 const logLunrSearchResultsId = () => {
 	const t0 = performance.now();
-	const searchResults = lunrSearchID.search('*000AB234*');
+	const searchResults = lunrSearch.search('id:*000AB234*');
 	const t1 = performance.now();
 	console.log('Lunr Search Results: id');
 	console.log(searchResults);
@@ -56,7 +40,7 @@ const logLunrSearchResultsId = () => {
 const logJquerySearchResultsId = () => {
 	const t0 = performance.now();
 	const searchResults = $.grep(documents, d => {
-		return d.ID.search(new RegExp(/(.?)000AB234(.?)/)) !== -1;
+		return d.id.search(new RegExp(/(.?)000AB234(.?)/)) !== -1;
 	});
 	const t1 = performance.now();
 	console.log('Jquery Search Results: id');
@@ -66,7 +50,7 @@ const logJquerySearchResultsId = () => {
 
 const logLunrSearchResultsName = () => {
 	const t0 = performance.now();
-	const searchResults = lunrSearchName.search('Part Apple');
+	const searchResults = lunrSearch.search('name:Part Apple');
 	const t1 = performance.now();
 	console.log('Lunr Search Results: name');
 	console.log(searchResults);
@@ -86,7 +70,7 @@ const logJquerySearchResultsName = () => {
 
 const logLunrSearchResultsKeywords = () => {
 	const t0 = performance.now();
-	const searchResults = lunrSearchKeywords.search('Houmous');
+	const searchResults = lunrSearch.search('keywords:Houmous');
 	const t1 = performance.now();
 	console.log('Lunr Search Results: keywords');
 	console.log(searchResults);
