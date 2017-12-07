@@ -30,6 +30,12 @@ const idSearchResults = lunrSearchID.search('*000AB234*');
 
 console.log(idSearchResults);
 
+const jqIDsearchResults = $.grep(documents, d => {
+	return d.ID.search(new RegExp(/(.?)000AB234(.?)/)) !== -1;
+});
+
+console.log(jqIDsearchResults);
+
 var lunrSearchName = lunr(function() {
 	this.ref('id')
 	this.field('name')
@@ -43,6 +49,12 @@ const nameSearchResults = lunrSearchName.search('Part Apple');
 
 console.log(nameSearchResults);
 
+const jqnameSearchResults = $.grep(documents, d => {
+	return d.name.search(new RegExp(/((.?)Part(.?)Apple(.?))|((.?)Apple(.?)Part(.?))/)) !== -1;
+});
+
+console.log(jqnameSearchResults);
+
 var lunrSearchKeywords = lunr(function() {
 	this.ref('id')
 	this.field('keywords')
@@ -55,3 +67,9 @@ var lunrSearchKeywords = lunr(function() {
 const keywordsSearchResults = lunrSearchKeywords.search('Houmous');
 
 console.log(keywordsSearchResults);
+
+const jqKeywordsSearchResults = $.grep(documents, d => {
+	return d.keywords.includes('Houmous');
+});
+
+console.log(jqKeywordsSearchResults);
